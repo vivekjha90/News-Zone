@@ -67,3 +67,79 @@ searchButton.addEventListener("click", () => {
     curSelectedNav?.classList.remove("active");
     curSelectedNav = null;
 });
+
+// Mobile Menu Toggle Functionality
+function toggleMobileMenu() {
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+    const body = document.body;
+    
+    // Toggle active classes
+    hamburger.classList.toggle('active');
+    navMenu.classList.toggle('active');
+    body.classList.toggle('menu-open');
+    
+    // Update hamburger animation
+    if (hamburger.classList.contains('active')) {
+        hamburger.setAttribute('aria-expanded', 'true');
+    } else {
+        hamburger.setAttribute('aria-expanded', 'false');
+    }
+}
+
+// Close mobile menu when clicking on nav links
+function closeMobileMenu() {
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+    const body = document.body;
+    
+    hamburger.classList.remove('active');
+    navMenu.classList.remove('active');
+    body.classList.remove('menu-open');
+    hamburger.setAttribute('aria-expanded', 'false');
+}
+
+// Enhanced onNavItemClick function to close mobile menu
+function onNavItemClick(itemId) {
+    // Close mobile menu first
+    closeMobileMenu();
+    
+    // Clear active states
+    document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+    
+    // Add active state to clicked item
+    const clickedLink = document.getElementById(itemId);
+    if (clickedLink) clickedLink.classList.add('active');
+    
+    console.log('Navigation item clicked:', itemId);
+    
+    // Your existing news filtering logic here
+    if (typeof filterNews === 'function') {
+        filterNews(itemId);
+    }
+}
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', function(event) {
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+    
+    // Check if click is outside hamburger and nav menu
+    if (!hamburger.contains(event.target) && !navMenu.contains(event.target)) {
+        closeMobileMenu();
+    }
+});
+
+// Close mobile menu with ESC key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeMobileMenu();
+    }
+});
+
+// Handle window resize - close menu on larger screens
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        closeMobileMenu();
+    }
+});
